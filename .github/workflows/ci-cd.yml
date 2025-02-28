@@ -1,0 +1,19 @@
+name: Deploy to GCP
+
+on: [push]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Authenticate with GCP
+        run: |
+          echo "${{ secrets.GCP_CREDENTIALS }}" > $HOME/gcp-key.json
+          gcloud auth activate-service-account --key-file=$HOME/gcp-key.json
+          gcloud config set project <ID_PROJECT_GCP>
+
+      - name: Test authentication
+        run: gcloud auth list
